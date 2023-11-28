@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#ba is short for boot application it automates the boot and separation of applications from the terminal.
+#This is the universal version of the application, if your using systemd as your init system its recommended to download the systemd version. 
+
+
+verbose=0; help=0
+
+#testing for config dir: 
+if [[ ! -d "$HOME/.config/ba" ]]; then
+ mkdir $HOME/.config/ba
+fi
+#testing for config file:
+if [[ ! -f "$HOME/.config/ba/ba.conf" ]]; then
+ echo "dir=$HOME" > "$HOME/.config/ba/ba.conf"
+fi 
+
+source "$HOME/.config/ba/ba.conf"
+
+while getopts "vh" opt; do
+    case $opt in
+        v) verbose=1 ;;        # verbose flag for debugging
+        h) help=1 ;; # help flag will nullify all the other flags as well as not run the actual script
+    \?) echo "Invalid option: -$OPTARG" >&2
+            exit 1
+            ;;
+    esac
+done
+
+#help page
+if [ $help -eq 1 ]; then
+ printf "ba is a small script that automates the batch deployment of detatched applications from the terminal.\n \n  valid options are:\n -v verbose: verbose flag for debugging/detailed logging\n -h this help page \n \n Additionally, If you want to change where the nohup file is output edit the directory in $HOME/.config/ba/ba.conf"
+ exit 0
+fi
+
+
+#script proper
+for args in "$@"; do 
+#prevents nohup from being passed flags
+ if [[ $args != -* ]]; then
+   nohup ${args} >> $dir/nohup${args}.out 2>&1 & 
+     if [ $verbose -eq 1 ]; then #verbose mode
+    echo "nohup ${args} &"
+    tail -f $dir/nohup${args}.out &
+    fi 
+fi
+done
+#script over
+exit 0
