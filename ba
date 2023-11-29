@@ -1,7 +1,5 @@
 #!/bin/sh
 
-#!/bin/sh
-
 #ba is short for boot application it automates the boot and separation of applications from the terminal.
 #This is the universal version of the application, if your using systemd as your init system its recommended to download the systemd version. 
 
