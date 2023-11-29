@@ -1,25 +1,22 @@
 #!/bin/sh
 
+#!/bin/sh
+
 #ba is short for boot application it automates the boot and separation of applications from the terminal.
 #This is the universal version of the application, if your using systemd as your init system its recommended to download the systemd version. 
 
 
 verbose=0; help=0
 
-#testing for config dir: 
-if [ ! -d "$HOME/.config" ]; then
- mkdir $HOME/.config
-fi
-#testing for ba conf dir
-if [ ! -d "$HOME/.config/ba" ]; then
- mkdir $HOME/.config/ba
-fi
+#make conf dir
+mkdir -p "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba"
 #testing for config file:
-if [ ! -f "$HOME/.config/ba/ba.conf" ]; then
+if [ ! -f "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba/ba.conf" ]; then
  echo "dir=$HOME" > "$HOME/.config/ba/ba.conf"
-fi 
+fi
 
-source "$HOME/.config/ba/ba.conf"
+#sourceing the conf file
+. "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba/ba.conf"
 
 while getopts "vh" opt; do
     case $opt in
@@ -41,7 +38,7 @@ fi
 #script proper
 for args in "$@"; do 
 #prevents nohup from being passed flags
- if [ $args != -* ]; then
+ if [ $args != "-*" ]; then
    nohup ${args} >> $dir/nohup${args}.out 2>&1 & 
      if [ $verbose -eq 1 ]; then #verbose mode
     echo "nohup ${args} &"
