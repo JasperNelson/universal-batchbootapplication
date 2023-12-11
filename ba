@@ -10,7 +10,7 @@ verbose=0; help=0
 mkdir -p "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba"
 #testing for config file:
 if [ ! -f "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba/ba.conf" ]; then
- echo "dir=$HOME" > "$HOME/.config/ba/ba.conf"
+ echo "dir=$HOME" > "${XDG_CONFIG_HOME:-"$HOME/.config"}/ba/ba.conf"
 fi
 
 #sourceing the conf file
